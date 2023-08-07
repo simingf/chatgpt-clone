@@ -8,7 +8,7 @@ import Chatbot from "./Chatbot";
 function App() {
   return (
     <div>
-      <Typography align="center" variant="h4" padding="1rem">Siming's ChatGPT Clone</Typography>
+      <Typography align="center" variant="h4" padding="1rem">Siming's ChatGPT</Typography>
       <Chatbot />
     </div>
   );

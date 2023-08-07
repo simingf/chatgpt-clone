@@ -19,9 +19,9 @@ const Chatbot = () => {
   const chatEndRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [secretKey, setSecretKey] = useState("");
-  const [temperature, setTemperature] = useState(0);
-  const [maxTokens, setMaxTokens] = useState(1000);
-  const [memoryLength, setMemoryLength] = useState(9);
+  const [temperature, setTemperature] = useState("0.5");
+  const [maxTokens, setMaxTokens] = useState("1000");
+  const [memoryLength, setMemoryLength] = useState("10");
 
   useEffect(() => {
     chatEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -158,7 +158,7 @@ const Chatbot = () => {
             <TextField
               type="number"
               inputProps={{
-                min: 0,
+                min: 1,
                 max: 20,
                 step: 1,
               }}
