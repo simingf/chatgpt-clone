@@ -1,6 +1,5 @@
 import {
   Button,
-  Container,
   Divider,
   Grid,
   List,
@@ -13,15 +12,19 @@ import axios from "axios";
 import { MuiMarkdown } from "mui-markdown";
 import React, { useEffect, useRef, useState } from "react";
 
-const Chatbot = () => {
+const Chatbot = ({
+  chat,
+  setChat,
+  messageParam,
+  setMessageParam,
+  secretKey,
+  temperature,
+  maxTokens,
+  memoryLength,
+  systemMessage,
+}) => {
   const [inputValue, setInputValue] = useState("");
-  const [chat, setChat] = useState([]);
   const chatEndRef = useRef(null);
-  const [messages, setMessages] = useState([]);
-  const [secretKey, setSecretKey] = useState("");
-  const [temperature, setTemperature] = useState("0.5");
-  const [maxTokens, setMaxTokens] = useState("1000");
-  const [memoryLength, setMemoryLength] = useState("10");
 
   useEffect(() => {
     chatEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -42,23 +45,23 @@ const Chatbot = () => {
       const user_input = inputValue;
       setInputValue("");
 
-      const input_messages = [
+      const input_message_param = [
         {
           role: "system",
-          content: "You are a helpful assistant.",
+          content: systemMessage,
         },
-        ...messages,
+        ...messageParam,
         { role: "user", content: user_input },
       ];
 
-      console.log("input_messages", input_messages);
+      console.log("input_message_param", input_message_param);
 
       try {
         const response = await axios.post(
           "https://api.openai.com/v1/chat/completions",
           {
             model: "gpt-3.5-turbo",
-            messages: input_messages,
+            messages: input_message_param,
             max_tokens: parseInt(maxTokens),
             temperature: parseFloat(temperature),
           },
@@ -72,14 +75,14 @@ const Chatbot = () => {
         const chatbotResponse = response.data.choices[0].message.content;
 
         const subtract = parseInt(memoryLength) * 2 - 2;
-        const newMessages = [
-          ...messages.slice(Math.max(messages.length - subtract, 0)),
+        const newMessageParam = [
+          ...messageParam.slice(Math.max(messageParam.length - subtract, 0)),
           { role: "user", content: user_input },
           { role: "assistant", content: chatbotResponse },
         ];
 
-        setMessages(newMessages);
-        console.log("messages", newMessages);
+        setMessageParam(newMessageParam);
+        console.log("messages", newMessageParam);
 
         setChat((prevChat) => [
           ...prevChat,
@@ -99,86 +102,12 @@ const Chatbot = () => {
   };
 
   return (
-    <Container>
-      <Grid container spacing={2}>
-        <Grid item xs={3}>
-          <Paper style={{ padding: "0.5rem" }}>
-            <h3>Secret Key:</h3>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Secret Key"
-              value={secretKey}
-              onChange={(e) => setSecretKey(e.target.value)}
-              style={{ marginBottom: "1rem" }}
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper style={{ padding: "0.5rem" }}>
-            <h3>Temperature (0-1):</h3>
-            <TextField
-              type="number"
-              inputProps={{
-                min: 0,
-                max: 1,
-                step: 0.1,
-              }}
-              fullWidth
-              variant="outlined"
-              placeholder="Temperature"
-              value={temperature}
-              onChange={(e) => setTemperature(e.target.value)}
-              style={{ marginBottom: "1rem" }}
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper style={{ padding: "0.5rem" }}>
-            <h3>Max Tokens (100-2000):</h3>
-            <TextField
-              type="number"
-              inputProps={{
-                min: 100,
-                max: 2000,
-                step: 100,
-              }}
-              fullWidth
-              variant="outlined"
-              placeholder="Max Tokens"
-              value={maxTokens}
-              onChange={(e) => setMaxTokens(e.target.value)}
-              style={{ marginBottom: "1rem" }}
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper style={{ padding: "0.5rem" }}>
-            <h3>Memory (0-20):</h3>
-            <TextField
-              type="number"
-              inputProps={{
-                min: 1,
-                max: 20,
-                step: 1,
-              }}
-              fullWidth
-              variant="outlined"
-              placeholder="Memory Length"
-              value={memoryLength}
-              onChange={(e) => setMemoryLength(e.target.value)}
-              style={{ marginBottom: "1rem" }}
-            />
-          </Paper>
-        </Grid>
-      </Grid>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
         <Paper
-          elevation={3}
           style={{
-            height: "55vh",
-            padding: "1rem",
-            marginTop: "1rem",
+            height: "40vh",
+            padding: "0.5rem",
             overflowY: "scroll",
           }}
         >
@@ -202,25 +131,31 @@ const Chatbot = () => {
       <Grid item xs={12}>
         <form onSubmit={handleInputSubmit}>
           <TextField
+            multiline
             fullWidth
             variant="outlined"
             placeholder="Type your message..."
             value={inputValue}
             onChange={handleInputChange}
-            style={{ marginTop: "1rem" }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleInputSubmit(e);
+              }
+            }}
           />
           <Button
             type="submit"
             variant="contained"
             color="primary"
             fullWidth
-            style={{ marginTop: "1rem" }}
+            style={{ marginTop: "0.5rem" }}
           >
             Send
           </Button>
         </form>
       </Grid>
-    </Container>
+    </Grid>
   );
 };
 
