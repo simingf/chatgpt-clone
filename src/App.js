@@ -10,10 +10,11 @@ import React, { useState } from "react";
 import prompts from "./prompts.json";
 
 function App() {
+  const [inputValue, setInputValue] = useState("");
   const [chat, setChat] = useState([]);
   const [secretKey, setSecretKey] = useState("");
-  const [temperature, setTemperature] = useState("0.8");
-  const [maxTokens, setMaxTokens] = useState("1000");
+  const [temperature, setTemperature] = useState("0.2");
+  const [maxTokens, setMaxTokens] = useState("500");
   const [memoryLength, setMemoryLength] = useState("5");
   const [systemMessage, setSystemMessage] = useState(
     "You are a helpful assistant."
@@ -40,17 +41,20 @@ function App() {
         setSystemMessage={setSystemMessage}
         setChat={setChat}
         setMessageParam={setMessageParam}
+        setInputValue={setInputValue}
       />
       <Chatbot
+        inputValue={inputValue}
+        setInputValue={setInputValue}
         chat={chat}
         setChat={setChat}
+        systemMessage={systemMessage}
         messageParam={messageParam}
         setMessageParam={setMessageParam}
         secretKey={secretKey}
         temperature={temperature}
         maxTokens={maxTokens}
         memoryLength={memoryLength}
-        systemMessage={systemMessage}
       />
     </Container>
   );

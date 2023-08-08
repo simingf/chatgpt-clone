@@ -8,22 +8,23 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
-import axios from "axios";
 import { MuiMarkdown } from "mui-markdown";
 import React, { useEffect, useRef, useState } from "react";
+import {getGPT} from "./GPT";
 
 const Chatbot = ({
+  inputValue,
+  setInputValue,
   chat,
   setChat,
+  systemMessage,
   messageParam,
   setMessageParam,
   secretKey,
   temperature,
   maxTokens,
   memoryLength,
-  systemMessage,
 }) => {
-  const [inputValue, setInputValue] = useState("");
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -45,59 +46,29 @@ const Chatbot = ({
       const user_input = inputValue;
       setInputValue("");
 
-      const input_message_param = [
-        {
-          role: "system",
-          content: systemMessage,
-        },
+      let chatbotResponse = await getGPT(
+        user_input,
+        systemMessage,
+        messageParam,
+        temperature,
+        maxTokens,
+        secretKey,
+        memoryLength,
+      );
+
+      const newMessageParam = [
         ...messageParam,
         { role: "user", content: user_input },
+        { role: "assistant", content: chatbotResponse },
       ];
 
-      console.log("input_message_param", input_message_param);
+      setMessageParam(newMessageParam);
+      console.log("all messages", newMessageParam);
 
-      try {
-        const response = await axios.post(
-          "https://api.openai.com/v1/chat/completions",
-          {
-            model: "gpt-3.5-turbo",
-            messages: input_message_param,
-            max_tokens: parseInt(maxTokens),
-            temperature: parseFloat(temperature),
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${secretKey}`,
-            },
-          }
-        );
-        const chatbotResponse = response.data.choices[0].message.content;
-
-        const subtract = parseInt(memoryLength) * 2 - 2;
-        const newMessageParam = [
-          ...messageParam.slice(Math.max(messageParam.length - subtract, 0)),
-          { role: "user", content: user_input },
-          { role: "assistant", content: chatbotResponse },
-        ];
-
-        setMessageParam(newMessageParam);
-        console.log("messages", newMessageParam);
-
-        setChat((prevChat) => [
-          ...prevChat,
-          { message: chatbotResponse, isUser: false },
-        ]);
-      } catch (error) {
-        setChat((prevChat) => [
-          ...prevChat,
-          {
-            message: "oopsie there was an error, ask me about it - siming",
-            isUser: false,
-          },
-        ]);
-        console.error("Error:", error.message);
-      }
+      setChat((prevChat) => [
+        ...prevChat,
+        { message: chatbotResponse, isUser: false },
+      ]);
     }
   };
 

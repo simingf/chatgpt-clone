@@ -12,6 +12,7 @@ const SystemComponent = ({
   setSystemMessage,
   setChat,
   setMessageParam,
+  setInputValue,
 }) => {
   const [act, setAct] = useState("Default");
 
@@ -24,6 +25,7 @@ const SystemComponent = ({
 
     if (selectedObject) {
       setSystemMessage(selectedObject.prompt);
+      setInputValue(selectedObject.prompt);
     } else {
       setSystemMessage("You are a helpful assistant.");
     }
@@ -49,7 +51,7 @@ const SystemComponent = ({
           ))}
         </Select>
       </FormControl>
-      <p>{systemMessage}</p>
+      {/* <p>{systemMessage}</p> */}
     </Paper>
   );
 };
