@@ -19,7 +19,7 @@ const SystemComponent = ({
     setMessageParam([]);
     const selectedRole = event.target.value;
     setRole(selectedRole);
-    const selectedObject = prompts.find((obj) => obj.act === role);
+    const selectedObject = prompts.find((obj) => obj.act === selectedRole);
 
     if (selectedObject) {
       setInputValue(selectedObject.prompt);
