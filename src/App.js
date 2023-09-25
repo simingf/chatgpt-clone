@@ -13,8 +13,8 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [chat, setChat] = useState([]);
   const [secretKey, setSecretKey] = useState("");
-  const [temperature, setTemperature] = useState("0.2");
-  const [maxTokens, setMaxTokens] = useState("500");
+  const [temperature, setTemperature] = useState("0.8");
+  const [maxTokens, setMaxTokens] = useState("6000");
   const [memoryLength, setMemoryLength] = useState("5");
   const [messageParam, setMessageParam] = useState([]);
   return (
