@@ -13,7 +13,6 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "mui-markdown": "^1.1.6",
-    "openai": "^3.3.0",
     "openai-streaming-hooks": "github:jonrhall/openai-streaming-hooks",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

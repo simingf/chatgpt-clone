@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@mui/material";
 import { MuiMarkdown } from "mui-markdown";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import {getGPT} from "./GPT";
 
 const Chatbot = ({
@@ -17,7 +17,6 @@ const Chatbot = ({
   setInputValue,
   chat,
   setChat,
-  systemMessage,
   messageParam,
   setMessageParam,
   secretKey,
@@ -48,7 +47,6 @@ const Chatbot = ({
 
       let chatbotResponse = await getGPT(
         user_input,
-        systemMessage,
         messageParam,
         temperature,
         maxTokens,

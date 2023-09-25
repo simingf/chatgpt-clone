@@ -16,9 +16,6 @@ function App() {
   const [temperature, setTemperature] = useState("0.2");
   const [maxTokens, setMaxTokens] = useState("500");
   const [memoryLength, setMemoryLength] = useState("5");
-  const [systemMessage, setSystemMessage] = useState(
-    "You are a helpful assistant."
-  );
   const [messageParam, setMessageParam] = useState([]);
   return (
     <Container>
@@ -36,9 +33,7 @@ function App() {
         setMemoryLength={setMemoryLength}
       />
       <SystemComponent
-        objectList={prompts}
-        systemMessage={systemMessage}
-        setSystemMessage={setSystemMessage}
+        prompts={prompts}
         setChat={setChat}
         setMessageParam={setMessageParam}
         setInputValue={setInputValue}
@@ -48,7 +43,6 @@ function App() {
         setInputValue={setInputValue}
         chat={chat}
         setChat={setChat}
-        systemMessage={systemMessage}
         messageParam={messageParam}
         setMessageParam={setMessageParam}
         secretKey={secretKey}

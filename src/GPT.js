@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getGPT = async (user_input, systemMessage, messageParam, temperature, maxTokens, secretKey, memoryLength) => {
+export const getGPT = async (user_input, messageParam, temperature, maxTokens, secretKey, memoryLength) => {
   try {
     const cutMessageParam = messageParam.slice(Math.max(messageParam.length - parseInt(memoryLength) * 2, 0))
     const inputMessageParam = [
@@ -17,7 +17,7 @@ export const getGPT = async (user_input, systemMessage, messageParam, temperatur
     const response = await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         messages: inputMessageParam,
         temperature: parseFloat(temperature),
         max_tokens: parseInt(maxTokens),
@@ -29,10 +29,11 @@ export const getGPT = async (user_input, systemMessage, messageParam, temperatur
         },
       }
     );
+
     return response.data.choices[0].message.content;
 
   } catch (error) {
     console.error("Error:", error.message);
-    return "oopsie there was an error, ask me about it - siming"
+    return "oopsie there was an error, ask me about it - siming \n\n" + error.message;
   }
 }
